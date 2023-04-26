@@ -4,8 +4,9 @@
   "description": "- API dapat menyimpan buku - API dapat menampilkan seluruh buku - API dapat menampilkan detail buku - API dapat mengubah data buku - API dapat menghapus buku - Project menggunakan port 9000 - project memiliki runner script dengan nama start",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./src/server.js",
-    "lint": "eslint ./src"
+    "start-dev": "nodemon ./src/server.js",
+    "start" : "node ./src/server.js",
+    "lint-dev": "eslint ./src"
   },
   "keywords": [],
   "author": "",
