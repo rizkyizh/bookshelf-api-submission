@@ -1,0 +1,23 @@
+{
+  "name": "bookshelf-api-submission",
+  "version": "1.0.0",
+  "description": "- API dapat menyimpan buku - API dapat menampilkan seluruh buku - API dapat menampilkan detail buku - API dapat mengubah data buku - API dapat menghapus buku - Project menggunakan port 9000 - project memiliki runner script dengan nama start",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon ./src/server.js",
+    "lint": "eslint ./src"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/hapi": "^21.3.2",
+    "nanoid": "^3.3.6"
+  },
+  "devDependencies": {
+    "eslint": "^8.39.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "nodemon": "^2.0.22"
+  }
+}
