@@ -7,6 +7,14 @@ const responseBody = (status, { message, data }) => ({
   data,
 });
 
+const getBooksOnlyIdNamePublisher = (data) => {
+  const getBooksSpecified = [];
+  data.forEach(({ id, name, publisher }) => {
+    getBooksSpecified.push({ id, name, publisher });
+  });
+  return getBooksSpecified;
+};
+
 const addBooksHandler = (request, h) => {
   const {
     name, year, author, summary, publisher, pageCount, readPage, reading,
@@ -47,18 +55,34 @@ const addBooksHandler = (request, h) => {
   return h.response(responseBody('error', { message: 'Buku gagal untuk ditambahkan' })).code(500);
 };
 
-const getAllBooksHandler = () => {
-  const getBooksSpecified = [];
-  books.forEach((objBook) => {
-    const bookList = {
-      id: objBook.id,
-      name: objBook.name,
-      publisher: objBook.publisher,
-    };
-    getBooksSpecified.push(bookList);
-  });
+const getAllBooksHandler = (request, h) => {
+  const { name, reading, finished } = request.query;
+  if (name !== undefined) {
+    const filterBooksByNameParams = books.filter((book) => (name.toLowerCase().split('')).every((char) => (book.name).toLowerCase().split('').includes(char)));
+    return h.response(responseBody('success', { data: { books: getBooksOnlyIdNamePublisher(filterBooksByNameParams) } })).code(200);
+  }
 
-  return responseBody('success', { data: { books: getBooksSpecified } });
+  if (reading !== undefined) {
+    if (reading !== '0') {
+      const readingBooks = books.filter((book) => book.reading === true);
+      return h.response(responseBody('success', { data: { books: getBooksOnlyIdNamePublisher(readingBooks) } })).code(200);
+    }
+    const unreadingBooks = books.filter((book) => book.reading === false);
+    return h.response(responseBody('success', { data: { books: getBooksOnlyIdNamePublisher(unreadingBooks) } })).code(200);
+  }
+
+  if (finished !== undefined) {
+    if (finished !== '0') {
+      const finishedBook = books.filter((book) => book.finished === true);
+      return h.response(responseBody('success', { data: { books: getBooksOnlyIdNamePublisher(finishedBook) } })).code(200);
+    }
+    const unfinishedBook = books.filter((book) => book.finished === false);
+    return h.response(responseBody('success', { data: { books: getBooksOnlyIdNamePublisher(unfinishedBook) } })).code(200);
+  }
+
+  const allBooks = getBooksOnlyIdNamePublisher(books);
+
+  return h.response(responseBody('success', { data: { books: allBooks } })).code(200);
 };
 
 const getBookByIdHandler = (request, h) => {
@@ -84,6 +108,7 @@ const editBookByIdHandler = (request, h) => {
   }
 
   const updatedAt = new Date().toISOString();
+  const finished = pageCount === readPage;
 
   const index = books.findIndex((book) => book.id === bookId);
 
@@ -97,6 +122,7 @@ const editBookByIdHandler = (request, h) => {
       publisher,
       pageCount,
       readPage,
+      finished,
       reading,
       updatedAt,
     };
